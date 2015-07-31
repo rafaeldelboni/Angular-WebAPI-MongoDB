@@ -59,17 +59,16 @@
     <Folder Include="Models\" />
     <Folder Include="Views\" />
     <Folder Include="Modules\" />
-    <Folder Include="Modules\Modules\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\Actor.cs" />
     <Compile Include="Models\ActorRepository.cs" />
     <Compile Include="Models\Movie.cs" />
     <Compile Include="Models\MovieRepository.cs" />
-    <Compile Include="Modules\Modules\ActorsModule.cs" />
-    <Compile Include="Modules\Modules\HomeModule.cs" />
-    <Compile Include="Modules\Modules\MoviesModule.cs" />
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Modules\ActorsModule.cs" />
+    <Compile Include="Modules\HomeModule.cs" />
+    <Compile Include="Modules\MoviesModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App_Data\actors.json" />
