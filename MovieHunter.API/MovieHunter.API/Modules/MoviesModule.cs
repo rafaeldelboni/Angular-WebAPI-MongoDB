@@ -10,7 +10,7 @@ namespace MovieHunter.API.Modules
 {
 	public class MoviesModule : NancyModule
 	{
-		public MoviesModule(IMongoDatabase database, IRootPathProvider rootPathProvider) : base("/api")
+		public MoviesModule(IMongoDatabase database) : base("/api")
 		{
 			// GET api/movies
 			Get["/movies"] = _ =>
