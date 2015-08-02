@@ -2,19 +2,17 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Web;
 
 namespace MovieHunter.API.Models
 {
+	// For demo only, used for initial load of actors the database
 	public class ActorRepository
 	{
 		public List<Actor> ActorList { get; set; }
 
-		public List<Actor> Retrieve()
+		public List<Actor> Retrieve(string rootPath)
 		{
-
-			var filePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-			filePath = Path.Combine(HttpContext.Current.Request.PhysicalApplicationPath, @"App_Data/actors.json");
+			var filePath = Path.Combine(rootPath, @"App_Data/actors.json");
 			var json = System.IO.File.ReadAllText(filePath);
 			var actors = JsonConvert.DeserializeObject<ActorRepository>(json);
 

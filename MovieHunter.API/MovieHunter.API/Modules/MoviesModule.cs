@@ -1,41 +1,45 @@
-﻿using MovieHunter.API.Models;
+﻿using System.Collections.Generic;
+using System.Linq;
+using MongoDB.Driver;
+using MovieHunter.API.Models;
 using Nancy;
 using Nancy.ModelBinding;
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace MovieHunter.API.Modules
 {
 	public class MoviesModule : NancyModule
 	{
-		public MoviesModule() : base("/api")
+		public MoviesModule(IMongoDatabase database, IRootPathProvider rootPathProvider) : base("/api")
 		{
 			// GET api/movies
 			Get["/movies"] = _ =>
 			{
-				var movies = new Models.MovieRepository();
-				return JsonConvert.SerializeObject(movies.Retrieve());
+				var moviesDb = new MovieDAO(database);
+				var movieList = moviesDb.Retrieve();
+
+				return JsonConvert.SerializeObject(movieList);
 			};
 
 			// GET api/movies/title
 			Get["/movies/{title:alpha}"] = parameters =>
 			{
-				var movies = new Models.MovieRepository();
-				var movieList = movies.Retrieve();
+				var moviesDb = new MovieDAO(database);
+				var movieList = moviesDb.Retrieve();
 				var filteredList = movieList.Where(t => t.title.Contains(parameters.title));
+
 				return JsonConvert.SerializeObject(filteredList);
 			};
 
 			// GET api/movies/5
 			Get["/movies/{id:int}"] = parameters =>
 			{
-				var movies = new Models.MovieRepository();
-				var movieList = movies.Retrieve();
+				var moviesDb = new MovieDAO(database);
+				var movieList = moviesDb.Retrieve();
 				var movie = movieList.FirstOrDefault(t => t.movieId == parameters.id);
 
-				var actors = new Models.ActorRepository();
-				var actorList = actors.Retrieve();
+				var actorsDb = new ActorDAO(database);
+				var actorList = actorsDb.Retrieve();
 
 				var populatedActorList = new List<Models.Actor>();
 				foreach (var item in movie.keyActors)
