@@ -16,17 +16,17 @@ namespace MovieHunter.API.Modules
 			Get["/movies"] = _ =>
 			{
 				var moviesDb = new MovieDAO(database);
-				var movieList = moviesDb.Retrieve();
+				var movieList = moviesDb.GetMoviesList();
 
-				return JsonConvert.SerializeObject(movieList);
+				return JsonConvert.SerializeObject(movieList.Result);
 			};
 
 			// GET api/movies/title
 			Get["/movies/{title:alpha}"] = parameters =>
 			{
 				var moviesDb = new MovieDAO(database);
-				var movieList = moviesDb.Retrieve();
-				var filteredList = movieList.Where(t => t.title.Contains(parameters.title));
+				var movieList = moviesDb.GetMoviesList();
+				var filteredList = movieList.Result.Where(t => t.title.Contains(parameters.title));
 
 				return JsonConvert.SerializeObject(filteredList);
 			};
@@ -35,16 +35,16 @@ namespace MovieHunter.API.Modules
 			Get["/movies/{id:int}"] = parameters =>
 			{
 				var moviesDb = new MovieDAO(database);
-				var movieList = moviesDb.Retrieve();
-				var movie = movieList.FirstOrDefault(t => t.movieId == parameters.id);
+				var movieList = moviesDb.GetMoviesList();
+				var movie = movieList.Result.FirstOrDefault(t => t.movieId == parameters.id);
 
 				var actorsDb = new ActorDAO(database);
-				var actorList = actorsDb.Retrieve();
+				var actorList = actorsDb.GetActorsList();
 
 				var populatedActorList = new List<Models.Actor>();
 				foreach (var item in movie.keyActors)
 				{
-					var actor = actorList.FirstOrDefault(a => a.actorId == item.actorId);
+					var actor = actorList.Result.FirstOrDefault(a => a.actorId == item.actorId);
 					populatedActorList.Add(actor);
 				}
 				movie.keyActors = populatedActorList;

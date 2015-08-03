@@ -16,7 +16,7 @@ namespace MovieHunter.API.Models
 			database = _database;
 		}
 
-		private async Task<List<Movie>> getMoviesDb ()
+		public async Task<List<Movie>> GetMoviesList ()
 		{
 			var collection = database.GetCollection<Movie>("movies");
 			List<Movie> actors = await collection
@@ -26,10 +26,15 @@ namespace MovieHunter.API.Models
 			return actors;
 		}
 
-		public List<Movie> Retrieve()
+		public async Task<List<Movie>> PostMovie (Movie movie)
 		{
-			var movies = getMoviesDb ();
-			return movies.Result;
+			var collection = database.GetCollection<Movie>("movies");
+			List<Movie> actors = await collection
+				.Find (new BsonDocument ())
+				.ToListAsync();
+
+			return actors;
 		}
+
 	}
 }

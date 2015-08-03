@@ -7,7 +7,7 @@ namespace MovieHunter.API.Models
 	public class Actor
 	{
 		[BsonId]
-		public int actorId { get; set; }
+		public string actorId { get; set; }
 		public string name { get; set; }
 		public string country { get; set; }
 		public string imdbLink { get; set; }
