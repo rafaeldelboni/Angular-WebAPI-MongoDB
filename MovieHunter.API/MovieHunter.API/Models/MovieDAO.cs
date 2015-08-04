@@ -19,21 +19,39 @@ namespace MovieHunter.API.Models
 		public async Task<List<Movie>> GetMoviesList ()
 		{
 			var collection = database.GetCollection<Movie>("movies");
-			List<Movie> actors = await collection
+			List<Movie> movies = await collection
 				.Find (new BsonDocument ())
 				.ToListAsync();
 
-			return actors;
+			return movies;
 		}
 
-		public async Task<List<Movie>> PostMovie (Movie movie)
+		public async Task<string> PostMovie (Movie movie)
+		{
+			movie.movieId = ObjectId.GenerateNewId().ToString();
+
+			var collection = database.GetCollection<Movie>("movies");
+			await collection.InsertOneAsync(movie);
+
+			return movie.movieId;
+		}
+
+		public async Task<string> PutMovie (Movie movie)
 		{
 			var collection = database.GetCollection<Movie>("movies");
-			List<Movie> actors = await collection
-				.Find (new BsonDocument ())
-				.ToListAsync();
+			var filter = Builders<Movie>.Filter.Eq(s => s.movieId, movie.movieId);
+			var result = await collection.ReplaceOneAsync (filter, movie);
 
-			return actors;
+			return result.ToString();
+		}
+
+		public async Task<string> DeleteMovie (string movieId)
+		{
+			var collection = database.GetCollection<Movie>("movies");
+			var filter = Builders<Movie>.Filter.Eq(s => s.movieId, movieId);
+			var result = await collection.DeleteManyAsync(filter);
+
+			return result.ToString();
 		}
 
 	}

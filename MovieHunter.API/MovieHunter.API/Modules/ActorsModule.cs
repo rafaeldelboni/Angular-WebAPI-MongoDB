@@ -13,55 +13,57 @@ namespace MovieHunter.API.Modules
 		public ActorsModule(IMongoDatabase database) : base("/api")
 		{
 			// GET api/actors
-			Get["/actors"] = _ =>
+			Get["/actors", true] = async (parameters, ct) =>
 			{
 				var actorsDb = new ActorDAO(database);
-				var actorList = actorsDb.GetActorsList();
+				var actorList = await actorsDb.GetActorsList();
 
-				return JsonConvert.SerializeObject(actorList.Result);
+				return JsonConvert.SerializeObject(actorList);
 			};
 
 			// GET api/actors/name/actorname
-			Get["/actors/name/{name:alpha}"] = parameters =>
+			Get["/actors/name/{name:alpha}", true] = async (parameters, ct) =>
 			{
 				var actorsDb = new ActorDAO(database);
-				var actorList = actorsDb.GetActorsList();
-				var filteredList = actorList.Result.Where(t => t.name.Contains(parameters.name));
+				var actorList = await actorsDb.GetActorsList();
+				var filteredList = actorList.Where(t => t.name.Contains(parameters.name));
 
 				return JsonConvert.SerializeObject(filteredList);
 			};
 
 			// GET api/actors/5
-			Get["/actors/{id}"] = parameters =>
+			Get["/actors/{id}", true] = async (parameters, ct) =>
 			{
 				var actorsDb = new ActorDAO(database);
-				var actorList = actorsDb.GetActorsList();
-				var actor = actorList.Result.FirstOrDefault(t => t.actorId == parameters.id);
+				var actorList = await actorsDb.GetActorsList();
+				var actor = actorList.FirstOrDefault(t => t.actorId == parameters.id);
 
 				var moviesDb = new MovieDAO(database);
-				var movieList = moviesDb.GetMoviesList();
-				var keyMovies = movieList.Result.SelectMany(
-					m => m.keyActors.Where(
-						a => a.actorId == actor.actorId
-					), (m, a) => m
-				);
+				var movieList = await moviesDb.GetMoviesList();
+				var keyMovies = movieList
+					.Where(m => m.keyActors != null)
+					.SelectMany(
+						m => m.keyActors.Where(
+							a => a.actorId == actor.actorId), 
+						(m, a) => m);
 
-				actor.keyMovies = keyMovies.ToList();
+				if (keyMovies != null)
+					actor.keyMovies = keyMovies.ToList();
 
 				return JsonConvert.SerializeObject(actor);
 			};
 
 			// POST api/actors
-			Post["/actors"] = _ =>
+			Post["/actors", true] = async (parameters, ct) =>
 			{
 				try
 				{
 					Actor actor = this.Bind<Actor>(); // Nancy.ModelBinding
 
 					var actorsDb = new ActorDAO(database);
-					var actorInserted = actorsDb.PostActor(actor);
+					var actorInserted = await actorsDb.PostActor(actor);
 
-					return Negotiate.WithModel(actorInserted.Result)
+					return Negotiate.WithModel(actorInserted)
 						.WithStatusCode(HttpStatusCode.Created);
 				}
 				catch
@@ -71,7 +73,7 @@ namespace MovieHunter.API.Modules
 			};
 
 			// PUT api/actors/5
-			Put["/actors/{id}"] = parameters =>
+			Put["/actors/{id}", true] = async (parameters, ct) =>
 			{
 				try
 				{
@@ -79,9 +81,9 @@ namespace MovieHunter.API.Modules
 					actor.actorId = parameters.id;
 
 					var actorsDb = new ActorDAO(database);
-					Task<string> updateResult = actorsDb.PutActor(actor);
+					string updateResult = await actorsDb.PutActor(actor);
 
-					return Negotiate.WithModel(updateResult.Result)
+					return Negotiate.WithModel(updateResult)
 						.WithStatusCode(HttpStatusCode.OK);
 				}
 				catch
@@ -91,14 +93,14 @@ namespace MovieHunter.API.Modules
 			};
 
 			// DELETE api/actors/5
-			Delete["/actors/{id}"] = parameters =>
+			Delete["/actors/{id}", true] = async (parameters, ct) =>
 			{
 				try
 				{
 					var actorsDb = new ActorDAO(database);
-					Task<string> deleteResult = actorsDb.DeleteActor(parameters.id);
+					string deleteResult = await actorsDb.DeleteActor(parameters.id);
 
-					return Negotiate.WithModel(deleteResult.Result)
+					return Negotiate.WithModel(deleteResult)
 						.WithStatusCode(HttpStatusCode.OK);
 				}
 				catch

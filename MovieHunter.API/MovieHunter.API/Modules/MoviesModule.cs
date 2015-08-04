@@ -5,6 +5,7 @@ using MovieHunter.API.Models;
 using Nancy;
 using Nancy.ModelBinding;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace MovieHunter.API.Modules
 {
@@ -13,63 +14,102 @@ namespace MovieHunter.API.Modules
 		public MoviesModule(IMongoDatabase database) : base("/api")
 		{
 			// GET api/movies
-			Get["/movies"] = _ =>
+			Get["/movies", true] = async (parameters, ct) =>
 			{
 				var moviesDb = new MovieDAO(database);
-				var movieList = moviesDb.GetMoviesList();
+				var movieList = await moviesDb.GetMoviesList();
 
-				return JsonConvert.SerializeObject(movieList.Result);
+				return JsonConvert.SerializeObject(movieList);
 			};
 
-			// GET api/movies/title
-			Get["/movies/{title:alpha}"] = parameters =>
+			// GET api/movies/title/moviename
+			Get["/movies/title/{title:alpha}", true] = async (parameters, ct) =>
 			{
 				var moviesDb = new MovieDAO(database);
-				var movieList = moviesDb.GetMoviesList();
-				var filteredList = movieList.Result.Where(t => t.title.Contains(parameters.title));
+				var movieList = await moviesDb.GetMoviesList();
+				var filteredList = movieList.Where(t => t.title.Contains(parameters.title));
 
 				return JsonConvert.SerializeObject(filteredList);
 			};
 
 			// GET api/movies/5
-			Get["/movies/{id:int}"] = parameters =>
+			Get["/movies/{id}", true] = async (parameters, ct) =>
 			{
 				var moviesDb = new MovieDAO(database);
-				var movieList = moviesDb.GetMoviesList();
-				var movie = movieList.Result.FirstOrDefault(t => t.movieId == parameters.id);
+				var movieList = await moviesDb.GetMoviesList();
+				var movie = movieList.FirstOrDefault(t => t.movieId == parameters.id);
 
 				var actorsDb = new ActorDAO(database);
-				var actorList = actorsDb.GetActorsList();
+				var actorList = await actorsDb.GetActorsList();
 
-				var populatedActorList = new List<Models.Actor>();
-				foreach (var item in movie.keyActors)
+				if(movie.keyActors != null) 
 				{
-					var actor = actorList.Result.FirstOrDefault(a => a.actorId == item.actorId);
-					populatedActorList.Add(actor);
+					var populatedActorList = new List<Models.Actor>();
+					foreach (var item in movie.keyActors)
+					{
+						var actor = actorList.FirstOrDefault(a => a.actorId == item.actorId);
+						populatedActorList.Add(actor);
+					}
+					movie.keyActors = populatedActorList;
 				}
-				movie.keyActors = populatedActorList;
 
 				return JsonConvert.SerializeObject(movie);
 			};
 
 			// POST api/movies
-			Post["/movies"] = _ =>
+			Post["/movies", true] = async (parameters, ct) =>
 			{
-				Movie movie = this.Bind<Movie>(); //Bind is an extension method defined in Nancy.ModelBinding
-				return "Post movie form: " + movie.title;
+				try
+				{
+					Movie movie = this.Bind<Movie>(); // Nancy.ModelBinding
+
+					var moviesDb = new MovieDAO(database);
+					var movieInserted = await moviesDb.PostMovie(movie);
+
+					return Negotiate.WithModel(movieInserted)
+						.WithStatusCode(HttpStatusCode.Created);
+				}
+				catch
+				{
+					return HttpStatusCode.InternalServerError;
+				}
 			};
 
 			// PUT api/movies/5
-			Put["/movies/{id}"] = parameters =>
+			Put["/movies/{id}", true] = async (parameters, ct) =>
 			{
-				Movie movie = this.Bind<Movie>();
-				return "Put param: " + parameters.id + ", actor form: " + movie.title;
+				try
+				{
+					Movie movie = this.Bind<Movie>();
+					movie.movieId = parameters.id;
+
+					var moviesDb = new MovieDAO(database);
+					string updateResult = await moviesDb.PutMovie(movie);
+
+					return Negotiate.WithModel(updateResult)
+						.WithStatusCode(HttpStatusCode.OK);
+				}
+				catch
+				{
+					return HttpStatusCode.InternalServerError;
+				}
 			};
 
 			// DELETE api/movies/5
-			Delete["/movies/{id}"] = parameters =>
+			Delete["/movies/{id}", true] = async (parameters, ct) =>
 			{
-				return "Delete param: " + parameters.id;
+				try
+				{
+					var moviesDb = new MovieDAO(database);
+					string deleteResult = await moviesDb.DeleteMovie(parameters.id);
+
+					return Negotiate.WithModel(deleteResult)
+						.WithStatusCode(HttpStatusCode.OK);
+				}
+				catch
+				{
+					return HttpStatusCode.InternalServerError;
+				}
 			};
 		}
 	}
