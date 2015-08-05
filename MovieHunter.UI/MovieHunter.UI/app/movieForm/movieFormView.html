@@ -1,0 +1,144 @@
+﻿<div class="panel panel-primary">
+    <div class="panel-heading" style="font-size:large">
+        {{title}}
+    </div>
+
+    <div class="panel-body">
+
+		<form name="form" class="form-horizontal" novalidate>
+	    	<fieldset>
+
+        		<legend>Movie Information</legend>
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="title">Title</label>
+					<div class="col-sm-10">
+						<input class="form-control" type="text" ng-model="movie.title" id = "title" name="title" required />
+			            <span class="help-block has-error" ng-show="form.$submitted || form.title.$touched">
+		                	<span ng-show="form.title.$error.required">
+		                    	Movie name is required.
+		                	</span>
+		                </span>
+               		</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="description">Description</label>
+					<div class="col-sm-10">
+						<textarea class="form-control" type="text" ng-model="movie.description" id = "description" name="description" rows="3" required></textarea>
+			            <span class="help-block has-error" ng-show="form.$submitted || form.description.$touched">
+		                	<span ng-show="form.description.$error.required">
+		                    	Movie description is required.
+		                	</span>
+		                </span>
+               		</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="director">Director</label>
+					<div class="col-sm-10">
+						<input class="form-control" type="text" ng-model="movie.director" id = "director" name="director" required />
+			            <span class="help-block has-error" ng-show="form.$submitted || form.director.$touched">
+		                	<span ng-show="form.director.$error.required">
+		                    	Movie director is required.
+		                	</span>
+		                </span>
+               		</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="imdbLink">IMDB Link</label>
+					<div class="col-sm-10">
+						<input class="form-control" type="url" ng-model="movie.imdbLink" id = "imdbLink" name="imdbLink" required />
+			            <span class="help-block has-error" ng-show="form.$submitted || form.imdbLink.$touched">
+		                	<span ng-show="form.imdbLink.$error.required">
+		                    	IMDB Link is required.
+		                	</span>
+		                	<span ng-show="form.imdbLink.$error.url">
+		                    	IMDB Link is not a valid url.
+		                	</span>
+		                </span>
+               		</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="imageUrl">Image Url</label>
+					<div class="col-sm-10">
+						<input class="form-control" type="url" ng-model="movie.imageUrl" id = "imageUrl" name="imageUrl" required />
+			            <span class="help-block has-error" ng-show="form.$submitted || form.imageUrl.$touched">
+		                	<span ng-show="form.imageUrl.$error.required">
+		                    	Image Url is required.
+		                	</span>
+		                	<span ng-show="form.imageUrl.$error.url">
+		                    	Image Url is not a valid url.
+		                	</span>
+		                </span>
+               		</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="mpaa">MPAA Rating</label>
+					<div class="col-sm-10">
+						<input class="form-control" type="text" ng-model="movie.mpaa" id = "mpaa" name="mpaa" />
+               		</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="releaseDate">Release Date</label>
+					<div class="col-sm-10">
+						<input class="form-control" type="date" ng-model="movie.releaseDate" id = "releaseDate" name="releaseDate" />
+			            <div class="help-block has-error" ng-show="form.$submitted || form.releaseDate.$touched">
+		                	<span ng-show="form.releaseDate.$error.date">
+		                    	Release Date is not a valid date.
+		                	</span>
+		                </div>
+               		</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="keyActors">Actors</label>
+					<div class="col-sm-10">
+						<select 
+							class="form-control" 
+							ng-model="movie.keyActors" 
+							id = "keyActors" 
+							name = "keyActors"
+							ng-options="value as value.name for value in actors" 
+							ng-model="actorsModel"
+							multiple >
+						</select>
+               		</div>
+				</div>
+
+				<div class="form-group">
+		    		<div class="col-sm-offset-2 col-sm-10">
+				        <span>
+				            <button class="btn btn-primary"
+				                    style="width:80px;margin-right:10px"
+				                    ng-click="update(movie)">
+				                Save
+				            </button>
+				        </span>
+				        <span>
+				            <button class="btn btn-default"
+				                    style="width:70px"
+				                    ng-click="reset(form)">
+				                Reset
+				            </button>
+				        </span>
+	        		</div>
+				</div>
+
+				<div class="form-group" ng-show="message">
+		    		<div class="col-sm-offset-2 col-sm-10">
+						<pre class="alert-sm alert-warning" role="alert">{{message}}</pre>
+			        </div>
+				</div>
+
+			</fieldset>
+
+		</form>
+
+		<div class="row">
+			<div class="col-md-12">
+				<pre>form = {{movie | json}}</pre>
+				<pre>keyActors = {{movie.keyActors | json}}</pre>
+				<pre>master = {{master | json}}</pre>
+			</div>
+		</div>
+
+    </div>
+</div>

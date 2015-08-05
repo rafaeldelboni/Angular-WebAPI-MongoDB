@@ -10,6 +10,7 @@
                 .when("/", {
                     templateUrl: "app/welcomeView.html"
                 })
+
                 .when("/searchByTitle", {
                     templateUrl: "app/movieSearch/searchByTitleView.html",
                     controller: "SearchByTitleCtrl"
@@ -18,6 +19,12 @@
                     templateUrl: "app/movieDetail/movieDetailView.html",
                     controller: "MovieDetailCtrl"
                 })
+
+                .when("/createMovie/:movieId?", {
+                    templateUrl: "app/movieForm/movieFormView.html",
+                    controller: "MovieFormCtrl"
+                })
+
                 .when("/searchByActor", {
                     templateUrl: "app/movieSearch/searchByActorView.html",
                     controller: "SearchByActorCtrl"
@@ -26,6 +33,7 @@
                     templateUrl: "app/movieDetail/actorDetailView.html",
                     controller: "ActorDetailCtrl"
                 })
+
                 .otherwise({
                     redirectTo: "/"
                 })
