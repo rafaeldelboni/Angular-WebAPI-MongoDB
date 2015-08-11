@@ -5,25 +5,22 @@
         .module("movieHunter")
         .controller("MovieDetailCtrl",
                     ["$scope",
-                     "$http",
                      "$routeParams",
+                     "movieResource",
                      MovieDetailCtrl]);
 
-    function MovieDetailCtrl ($scope, $http, $routeParams) {
+    function MovieDetailCtrl ($scope, $routeParams, movieResource) {
         $scope.movieId = $routeParams.movieId;
 
-        // Callback after the promise on success
-        var onMovieRetrieveComplete = function (response) {
-            $scope.movie = response.data;
-        };
-
-        // Callback after the promise on error
-        var onError = function (reason) {
-            $scope.errorText = "Could not display the movie: " +
-                reason.data + " - " + reason.statusText + " (" + reason.status + ")";
-        };
-
-        $http.get("http://localhost:1561/api/movies/" + $scope.movieId)
-            .then(onMovieRetrieveComplete, onError);
+		movieResource.getMovies().get({ movieId: $scope.movieId },
+            function (data) {
+                $scope.movie = data;
+            },
+            function (response) {
+                $scope.errorText = response.message + "\r\n";
+                if (response.data && response.data.exceptionMessage)
+                    $scope.errorText += response.data.exceptionMessage;
+            }
+        );
     }
 }());

@@ -5,10 +5,10 @@
         .module("movieHunter")
         .controller("SearchByTitleCtrl",
                     ["$scope",
-                     "$http",
+                     "movieResource",
                      SearchByTitleCtrl]);
 
-    function SearchByTitleCtrl($scope, $http) {
+    function SearchByTitleCtrl($scope, movieResource) {
 
         $scope.movieList = [];
         $scope.title = "Search by Movie Title";
@@ -18,16 +18,15 @@
             $scope.showImage = !$scope.showImage;
         };
 
-        var onMovieRetrieveComplete = function (response) {
-            $scope.movieList = response.data;
-        };
-
-        var onError = function (reason) {
-            $scope.errorText = "Could not display the movie list: " +
-                        (reason.statusText ? reason.statusText : reason.description);
-        };
-
-        $http.get("http://localhost:1561/api/movies/")
-            .then(onMovieRetrieveComplete, onError);
+		movieResource.getMovies().query(
+            function (data) {
+                $scope.movieList = data;
+            },
+            function (response) {
+                $scope.errorText = response.message + "\r\n";
+                if (response.data && response.data.exceptionMessage)
+                    $scope.errorText += response.data.exceptionMessage;
+            }
+       );
     }
 }());

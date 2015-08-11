@@ -5,12 +5,15 @@
         .module("movieHunter")
         .controller("MovieFormCtrl",
                     ["$scope",
-                     "$http",
                      "$routeParams",
+                     "actorResource",
+                     "movieResource",
                      MovieFormCtrl]);
 
-    function MovieFormCtrl ($scope, $http, $routeParams) {
+    function MovieFormCtrl ($scope, $routeParams, actorResource, movieResource) {
     	$scope.movieId = $routeParams.movieId;
+        $scope.message = "";
+		$scope.master = {};
 
 		if ($scope.movieId == null) {
         	$scope.title = "Create Movie";
@@ -18,23 +21,34 @@
         	$scope.title = "Update Movie";
         }
 
-        $scope.message = "";
-		$scope.master = {};
+        $scope.actors = [];
+		actorResource.getActors().query(
+            function (data) {
+                $scope.actors = data;
+            },
+            function (response) {
+                $scope.errorText = response.message + "\r\n";
+                if (response.data && response.data.exceptionMessage)
+                    $scope.errorText += response.data.exceptionMessage;
+            }
+        );
 
-		$scope.actors = [
-	        {actorId: 1, name: "Actor 1"}, 
-	        {actorId: 2, name: "Actor 2"},  
-	        {actorId: 3, name: "Actor 3"},  
-	        {actorId: 4, name: "Actor 4"},  
-	        {actorId: 5, name: "Actor 5"},  
-	        {actorId: 6, name: "Actor 6"}
-    	];
     	$scope.actorsModel = {actorId: null, name: null};
 
 		$scope.update = function(movie) {
 			if($scope.form.$valid){
 		    	$scope.master = angular.copy(movie);
-		    	$scope.message = "Saved!";
+		    	movieResource.saveMovie().post($scope.master,
+    	            function (data) {
+		                $scope.movieId = data;
+		                $scope.message = "Saved!";
+		            },
+		            function (response) {
+		                $scope.message = response.message + "\r\n";
+		                if (response.data && response.data.exceptionMessage)
+		                    $scope.message += response.data.exceptionMessage;
+		            }
+	            );
 		  	}
 		};
 
@@ -49,4 +63,5 @@
 
 		$scope.reset();
     }
+
 }());

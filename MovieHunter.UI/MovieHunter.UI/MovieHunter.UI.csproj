@@ -71,6 +71,11 @@
     <Content Include="Scripts\angular-route.min.js" />
     <Content Include="app\movieForm\movieFormView.html" />
     <Content Include="app\movieForm\MovieFormCtrl.js" />
+    <Content Include="app\common\common.services.js" />
+    <Content Include="Scripts\angular-resource.js" />
+    <Content Include="Scripts\angular-resource.min.js" />
+    <Content Include="app\common\movieResource.js" />
+    <Content Include="app\common\actorResource.js" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\angular.min.js.map" />
@@ -79,8 +84,10 @@
     <None Include="Content\bootstrap.css.map" />
     <None Include="fonts\glyphicons-halflings-regular.woff2" />
     <None Include="Scripts\angular-route.min.js.map" />
+    <None Include="Scripts\angular-resource.min.js.map" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="app\movieForm\" />
+    <Folder Include="app\common\" />
   </ItemGroup>
 </Project>

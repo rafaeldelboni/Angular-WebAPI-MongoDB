@@ -2,7 +2,7 @@
 // Configures the UI routes
 (function () {
     // Define the main module
-    var app = angular.module("movieHunter", ["ngRoute"]);
+    var app = angular.module("movieHunter", ["ngRoute", "common.services"]);
   
     app.config(['$routeProvider',
         function ($routeProvider) {

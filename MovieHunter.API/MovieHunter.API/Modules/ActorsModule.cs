@@ -22,7 +22,7 @@ namespace MovieHunter.API.Modules
 			};
 
 			// GET api/actors/name/actorname
-			Get["/actors/name/{name:alpha}", true] = async (parameters, ct) =>
+			Get["/actors/name/{name*}", true] = async (parameters, ct) =>
 			{
 				var actorsDb = new ActorDAO(database);
 				var actorList = await actorsDb.GetActorsList();
