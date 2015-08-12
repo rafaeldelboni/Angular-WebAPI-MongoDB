@@ -26,7 +26,8 @@
     	movieResource.saveMovie = function() {
         	return $resource(appSettings.serverPath + "/api/movies/:movieId", null,
         	{ 'post':	{method:'POST'},
-			  'put':	{method:'PUT'}
+			  'put':	{method:'PUT'},
+			  'delete':	{method:'DELETE'}
 		  	});
         }
 

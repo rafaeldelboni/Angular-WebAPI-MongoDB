@@ -6,10 +6,11 @@
         .controller("MovieDetailCtrl",
                     ["$scope",
                      "$routeParams",
+                     "$location",
                      "movieResource",
                      MovieDetailCtrl]);
 
-    function MovieDetailCtrl ($scope, $routeParams, movieResource) {
+    function MovieDetailCtrl ($scope, $routeParams, $location, movieResource) {
         $scope.movieId = $routeParams.movieId;
 
 		movieResource.getMovies().get({ movieId: $scope.movieId },
@@ -22,5 +23,18 @@
                     $scope.errorText += response.data.exceptionMessage;
             }
         );
+
+		$scope.delete = function() {			
+			movieResource.getMovies().delete({ movieId: $scope.movieId },
+				function (data) {
+	                $location.path('/searchByTitle');
+	            },
+	            function (response) {
+	                $scope.errorText = response.message + "\r\n";
+	                if (response.data && response.data.exceptionMessage)
+	                    $scope.errorText += response.data.exceptionMessage;
+	            }
+        	);
+		};
     }
 }());

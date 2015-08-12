@@ -1,6 +1,10 @@
 ﻿<div class="panel panel-primary">
-    <div class="panel-heading" style="font-size:large">
-        {{title}}
+
+    <div class="panel-heading clearfix" style="font-size:large">
+    	<h4 class="panel-title pull-left" style="padding-top: 7.5px;">
+    		<a ng-href="{{movie.imdbLink}}" style="color:white">{{title}}</a>
+    	</h4>
+        <button class="btn btn-default pull-right" ng-click="back()"> Back </button>
     </div>
 
     <div class="panel-body">
@@ -80,7 +84,7 @@
 				<div class="form-group">
 					<label class="col-sm-2 control-label" for="releaseDate">Release Date</label>
 					<div class="col-sm-10">
-						<input class="form-control" type="date" ng-model="movie.releaseDate" id = "releaseDate" name="releaseDate" />
+						<input class="form-control" type="date" ng-model="movie.releaseDate" id = "releaseDate" name="releaseDate"/>
 			            <div class="help-block has-error" ng-show="form.$submitted || form.releaseDate.$touched">
 		                	<span ng-show="form.releaseDate.$error.date">
 		                    	Release Date is not a valid date.
@@ -96,8 +100,7 @@
 							ng-model="movie.keyActors" 
 							id = "keyActors" 
 							name = "keyActors"
-							ng-options="value as value.name for value in actors" 
-							ng-model="actorsModel"
+							ng-options="actor.name for actor in actors track by actor.actorId" 
 							multiple >
 						</select>
                		</div>
@@ -131,14 +134,6 @@
 			</fieldset>
 
 		</form>
-
-		<div class="row">
-			<div class="col-md-12">
-				<pre>form = {{movie | json}}</pre>
-				<pre>keyActors = {{movie.keyActors | json}}</pre>
-				<pre>master = {{master | json}}</pre>
-			</div>
-		</div>
 
     </div>
 </div>

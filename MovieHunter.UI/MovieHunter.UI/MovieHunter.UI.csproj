@@ -76,6 +76,7 @@
     <Content Include="Scripts\angular-resource.min.js" />
     <Content Include="app\common\movieResource.js" />
     <Content Include="app\common\actorResource.js" />
+    <Content Include="app\helpers\ng-really.js" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\angular.min.js.map" />
@@ -89,5 +90,6 @@
   <ItemGroup>
     <Folder Include="app\movieForm\" />
     <Folder Include="app\common\" />
+    <Folder Include="app\helpers\" />
   </ItemGroup>
 </Project>
