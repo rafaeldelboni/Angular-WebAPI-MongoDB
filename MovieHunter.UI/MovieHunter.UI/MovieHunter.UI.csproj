@@ -70,13 +70,15 @@
     <Content Include="Scripts\angular-route.js" />
     <Content Include="Scripts\angular-route.min.js" />
     <Content Include="app\movieForm\movieFormView.html" />
-    <Content Include="app\movieForm\MovieFormCtrl.js" />
     <Content Include="app\common\common.services.js" />
     <Content Include="Scripts\angular-resource.js" />
     <Content Include="Scripts\angular-resource.min.js" />
     <Content Include="app\common\movieResource.js" />
     <Content Include="app\common\actorResource.js" />
     <Content Include="app\helpers\ng-really.js" />
+    <Content Include="app\movieForm\actorFormView.html" />
+    <Content Include="app\movieForm\movieFormCtrl.js" />
+    <Content Include="app\movieForm\actorFormCtrl.js" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\angular.min.js.map" />

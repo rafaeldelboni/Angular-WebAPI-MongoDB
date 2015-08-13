@@ -19,8 +19,7 @@
                     templateUrl: "app/movieDetail/movieDetailView.html",
                     controller: "MovieDetailCtrl"
                 })
-
-                .when("/createMovie/:movieId?", {
+                .when("/saveMovie/:movieId?", {
                     templateUrl: "app/movieForm/movieFormView.html",
                     controller: "MovieFormCtrl"
                 })
@@ -32,6 +31,10 @@
                 .when("/showActorDetail/:actorId", {
                     templateUrl: "app/movieDetail/actorDetailView.html",
                     controller: "ActorDetailCtrl"
+                })
+                .when("/saveActor/:actorId?", {
+                    templateUrl: "app/movieForm/actorFormView.html",
+                    controller: "ActorFormCtrl"
                 })
 
                 .otherwise({

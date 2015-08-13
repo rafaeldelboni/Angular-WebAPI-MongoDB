@@ -1,6 +1,13 @@
 ﻿<div class="panel panel-success">
-    <div class="panel-heading" style="font-size:large">
-        <a ng-href="{{actor.imdbLink}}">{{ actor.name }}</a>
+
+    <div class="panel-heading clearfix" style="font-size:large">
+    	<h4 class="panel-title pull-left" style="padding-top: 7.5px;">
+    		<a ng-href="{{actor.imdbLink}}">{{ actor.name }}</a>
+    	</h4>
+    	<div class="pull-right">
+    		<a ng-href="#saveActor/{{ actor.actorId }}" class="btn btn-default btn">Edit</a>
+    		<button type="button" class="btn btn-danger" ng-really-message="Are you sure?" ng-really-click="delete()">Delete</button>
+    	</div>
     </div>
 
     <div class="panel-body">

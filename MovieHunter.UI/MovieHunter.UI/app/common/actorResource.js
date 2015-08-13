@@ -26,7 +26,8 @@
     	actorResource.saveActor = function() {
         	return $resource(appSettings.serverPath + "/api/actors/:actorId", null,
         	{ 'post':	{method:'POST'},
-			  'put':	{method:'PUT'}
+			  'put':	{method:'PUT'},
+			  'delete':	{method:'DELETE'}
 		  	});
         }
 

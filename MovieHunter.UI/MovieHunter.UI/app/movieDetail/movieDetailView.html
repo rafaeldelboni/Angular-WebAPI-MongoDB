@@ -5,7 +5,7 @@
     		<a ng-href="{{movie.imdbLink}}" style="color:white">{{ movie.title }}</a>
     	</h4>
     	<div class="pull-right">
-    		<a ng-href="#createMovie/{{ movie.movieId }}" class="btn btn-default btn">Edit</a>
+    		<a ng-href="#saveMovie/{{ movie.movieId }}" class="btn btn-default btn">Edit</a>
     		<button type="button" class="btn btn-danger" ng-really-message="Are you sure?" ng-really-click="delete()">Delete</button>
     	</div>
     </div>
@@ -40,7 +40,6 @@
                             <a ng-href="{{actor.imdbLink}}">IMDB</a>
                         </td>
                     </tr>
-
                 </tbody>
             </table>
         </div>

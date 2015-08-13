@@ -6,10 +6,11 @@
         .controller("ActorDetailCtrl",
                     ["$scope",
                      "$routeParams",
+                     "$location",
                      "actorResource",
                      ActorDetailCtrl]);
 
-    function ActorDetailCtrl ($scope, $routeParams, actorResource) {
+    function ActorDetailCtrl ($scope, $routeParams, $location, actorResource) {
         $scope.actorId = $routeParams.actorId;
 
 		actorResource.getActors().get({ actorId: $scope.actorId },
@@ -23,5 +24,17 @@
             }
         );
 
+		$scope.delete = function() {			
+			actorResource.getActors().delete({ actorId: $scope.actorId },
+				function (data) {
+	                $location.path('/searchByActor');
+	            },
+	            function (response) {
+	                $scope.errorText = response.message + "\r\n";
+	                if (response.data && response.data.exceptionMessage)
+	                    $scope.errorText += response.data.exceptionMessage;
+	            }
+        	);
+		};
     }
 }());
