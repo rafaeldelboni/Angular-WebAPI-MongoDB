@@ -1,6 +1,6 @@
 ﻿(function () {
     "use strict";
-
+    // Commit test
     angular
         .module("movieHunter")
         .controller("MovieFormCtrl",
