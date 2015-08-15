@@ -1,6 +1,6 @@
 ﻿(function () {
     "use strict";
-
+    // Commit test
     angular
         .module("movieHunter")
         .controller("MovieFormCtrl",
@@ -21,17 +21,17 @@
         	$scope.title = "Update Movie";
 
 			movieResource.getMovies().get({ movieId: $scope.movieId },
-            function (data) {
-                $scope.movie = data;
-                $scope.movie.releaseDate = new Date($scope.movie.releaseDate);
-                $scope.master = angular.copy($scope.movie);
-            },
-            function (response) {
-                $scope.errorText = response.message + "\r\n";
-                if (response.data && response.data.exceptionMessage)
-                    $scope.errorText += response.data.exceptionMessage;
-            }
-        );
+	            function (data) {
+	                $scope.movie = data;
+	                $scope.movie.releaseDate = new Date($scope.movie.releaseDate);
+	                $scope.master = angular.copy($scope.movie);
+	            },
+	            function (response) {
+	                $scope.errorText = response.message + "\r\n";
+	                if (response.data && response.data.exceptionMessage)
+	                    $scope.errorText += response.data.exceptionMessage;
+	            }
+	        );
 
         }
 
@@ -46,8 +46,6 @@
                     $scope.errorText += response.data.exceptionMessage;
             }
         );
-
-    	$scope.actorsModel = {actorId: null, name: null};
 
 		$scope.update = function(movie) {
 			if($scope.form.$valid){
@@ -71,7 +69,6 @@
 			    		{ movieId: $scope.movieId },
 			    		$scope.master,
 	    	            function (data) {
-			                $scope.movieId = data;
 			                $scope.message = "Updated!";
 			            },
 			            function (response) {
@@ -95,7 +92,9 @@
 
 		$scope.back = function() {			
 			history.back();
-        	scope.$apply();
+        	if(!$scope.$$phase) {
+				$scope.$apply();
+			}
 		};
 
 		$scope.reset();
