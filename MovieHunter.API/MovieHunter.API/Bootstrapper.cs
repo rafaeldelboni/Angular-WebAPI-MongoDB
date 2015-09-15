@@ -54,11 +54,16 @@ namespace MovieHunter.API
 
 		private async Task<bool> CollectionExistsAsync(IMongoDatabase database, string collectionName)
 		{
-			var filter = new BsonDocument("name", collectionName);
-			//filter by collection name
-			var collections = await database.ListCollectionsAsync(new ListCollectionsOptions { Filter = filter });
-			//check for existence
-			return (await collections.ToListAsync()).Any();
+			try {
+				var filter = new BsonDocument("name", collectionName);
+				//filter by collection name
+				var collections = database.ListCollectionsAsync(new ListCollectionsOptions { Filter = filter });
+				//check for existence
+				return (await collections.Result.ToListAsync()).Any();
+			}
+			catch {
+				throw;
+			}
 		}
 
 		private async void firstTimeInstallDataBase (IMongoDatabase database, string rootPath){
